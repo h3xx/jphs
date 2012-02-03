@@ -34,6 +34,11 @@ jpseek: $(SKOBJECTS)
 bf.o:			CFLAGS=$(BF_CFLAGS)
 jphide.o jpseek.o:	CFLAGS=$(JP_CFLAGS)
 
+# dependencies
+bf.c: bf.h
+jphide.c: ltable.h version.h bf.h
+jpseek.c: ltable.h version.h bf.h
+
 # other targets
 clean:
 	$(RM) \
