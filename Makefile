@@ -3,13 +3,22 @@ HDOBJECTS = jphide.o bf.o
 SKOBJECTS = jpseek.o bf.o
 
 ## flags
+
+### big-endian Blowfish only flags
+BE_CFLAGS = -DBF_DONTNEED_LE \
+	    -DBlowfish_Encrypt=B_Blowfish_Encrypt \
+	    -DBlowfish_Decrypt=B_Blowfish_Decrypt
+### little-endian Blowfish only flags
+### (might break Blowfish which is big-endian by default)
+LE_CFLAGS = -DBF_DONTNEED_BE \
+	    -DBlowfish_Encrypt=L_Blowfish_Encrypt \
+	    -DBlowfish_Decrypt=L_Blowfish_Decrypt
+
 JP_CFLAGS = -O2 \
 	    -I./jpeg-8a \
-	    -DBlowfish_Encrypt=_N_Blowfish_Encrypt \
-	    -DBlowfish_Decrypt=_N_Blowfish_Decrypt
+	    $(BE_CFLAGS)
 BF_CFLAGS = -O2 \
-	    -I/usr/src/linux/include \
-	    -I/usr/src/linux/arch/x86/include
+	    $(BE_CFLAGS)
 
 LIBS = -ljpeg
 LDFLAGS = $(LIBS)
