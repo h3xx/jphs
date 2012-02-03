@@ -414,11 +414,11 @@ static void intro()
  struct rlimit	rlim;
 
  printf("\njphide, version %d.%d (c) 1998 Allan Latham <alatham@flexsys-group.com>\n\n", HS_MAJOR_VERSION, HS_MINOR_VERSION);
- printf("This is licenced software but no charge is made for its use.\n");
- printf("NO WARRANTY whatsoever is offered with this product.\n");
- printf("NO LIABILITY whatsoever is accepted for its use.\n");
- printf("You are using this entirely at your OWN RISK.\n");
- printf("See the GNU Public Licence for full details.\n\n");
+ printf("This is licenced software but no charge is made for its use.\n\
+NO WARRANTY whatsoever is offered with this product.\n\
+NO LIABILITY whatsoever is accepted for its use.\n\
+You are using this entirely at your OWN RISK.\n\
+See the GNU Public Licence for full details.\n\n");
 
  rlim.rlim_cur = 0;
  rlim.rlim_max = 0;
