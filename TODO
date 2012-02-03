@@ -1,0 +1,7 @@
+Test whether the new implementation of Blowfish is compatible with
+steganography from previous versions of jphs. May also be a good idea to figure
+out whether the Blowfish algorithm used was big- or little-endian.
+
+Eliminate artifacts of Blowfish expecting to be compiled into the kernel.
+
+Improve online documentation--write a man page?
