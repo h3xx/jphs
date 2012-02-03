@@ -17,7 +17,7 @@ a big advantage over any others I have seen. They distribute the
 hidden file in the jpeg so that not only are the visual effects
 minimized but also the statistical effects. Simple programs which
 store the hidden file in low order bits result in jpeg files which
-are so statisticaly different from normal jpeg files that the
+are so statistically different from normal jpeg files that the
 hidden file can be recovered with ease.
 
 "jphide" uses the Blowfish algorithm to provide a stream of
@@ -27,8 +27,8 @@ initialize this stream. Although the hidden file is "encrypted"
 by this process I strongly recommend that you encrypt the hidden
 file before insertion into the jpeg.
 
-Using jpeg files of about 200Kb, upto 20Kb can be inserted with
-minimal visual and statistical effect. Upto about 35Kb is often
+Using jpeg files of about 200Kb, up to 20Kb can be inserted with
+minimal visual and statistical effect. Up to about 35Kb is often
 possible at the cost of visual and/or statistical effects. The 
 program will refuse to insert even more because it is just too
 obvious in the resulting jpeg file.
