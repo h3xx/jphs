@@ -1,0 +1,2 @@
+#define HS_MAJOR_VERSION 0
+#define HS_MINOR_VERSION 3

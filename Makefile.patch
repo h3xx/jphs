@@ -1,0 +1,71 @@
+--- Makefile.old	Tue Nov 17 21:14:52 1998
++++ Makefile	Tue Nov 17 21:22:17 1998
+@@ -74,7 +74,7 @@
+ # source files: cjpeg/djpeg/jpegtran applications, also rdjpgcom/wrjpgcom
+ APPSOURCES= cjpeg.c djpeg.c jpegtran.c cdjpeg.c rdcolmap.c rdswitch.c \
+         rdjpgcom.c wrjpgcom.c rdppm.c wrppm.c rdgif.c wrgif.c rdtarga.c \
+-        wrtarga.c rdbmp.c wrbmp.c rdrle.c wrrle.c
++        wrtarga.c rdbmp.c wrbmp.c rdrle.c wrrle.c jphide.c jpseek.c
+ SOURCES= $(LIBSOURCES) $(SYSDEPSOURCES) $(APPSOURCES)
+ # files included by source files
+ INCLUDES= jchuff.h jdhuff.h jdct.h jerror.h jinclude.h jmemsys.h jmorecfg.h \
+@@ -114,9 +114,11 @@
+ DOBJECTS= djpeg.o wrppm.o wrgif.o wrtarga.o wrrle.o wrbmp.o rdcolmap.o \
+         cdjpeg.o
+ TROBJECTS= jpegtran.o rdswitch.o cdjpeg.o
++HDOBJECTS= jphide.o bf-i386.o
++SKOBJECTS= jpseek.o bf-i386.o
+ 
+ 
+-all:  libjpeg.a cjpeg djpeg jpegtran rdjpgcom wrjpgcom
++all:  libjpeg.a cjpeg djpeg jpegtran rdjpgcom wrjpgcom jphide jpseek
+ 
+ # This rule causes ansi2knr to be invoked.
+ # .c.o:
+@@ -139,6 +141,12 @@
+ djpeg: $(DOBJECTS) libjpeg.a
+ 	$(LN) $(LDFLAGS) -o djpeg $(DOBJECTS) libjpeg.a $(LDLIBS)
+ 
++jphide: $(HDOBJECTS) libjpeg.a
++	$(LN) $(LDFLAGS) -o jphide $(HDOBJECTS) libjpeg.a $(LDLIBS)
++
++jpseek: $(SKOBJECTS) libjpeg.a
++	$(LN) $(LDFLAGS) -o jpseek $(SKOBJECTS) libjpeg.a $(LDLIBS)
++
+ jpegtran: $(TROBJECTS) libjpeg.a
+ 	$(LN) $(LDFLAGS) -o jpegtran $(TROBJECTS) libjpeg.a $(LDLIBS)
+ 
+@@ -153,12 +161,14 @@
+ 	echo Please read the installation directions in install.doc.
+ 	exit 1
+ 
+-install: cjpeg djpeg jpegtran rdjpgcom wrjpgcom
++install: cjpeg djpeg jpegtran rdjpgcom wrjpgcom jphide jpseek
+ 	$(INSTALL_PROGRAM) cjpeg $(bindir)/$(binprefix)cjpeg
+ 	$(INSTALL_PROGRAM) djpeg $(bindir)/$(binprefix)djpeg
+ 	$(INSTALL_PROGRAM) jpegtran $(bindir)/$(binprefix)jpegtran
+ 	$(INSTALL_PROGRAM) rdjpgcom $(bindir)/$(binprefix)rdjpgcom
+ 	$(INSTALL_PROGRAM) wrjpgcom $(bindir)/$(binprefix)wrjpgcom
++	$(INSTALL_PROGRAM) jphide $(bindir)/$(binprefix)jphide
++	$(INSTALL_PROGRAM) jpseek $(bindir)/$(binprefix)jpseek
+ 	$(INSTALL_DATA) $(srcdir)/cjpeg.1 $(mandir)/$(manprefix)cjpeg.$(manext)
+ 	$(INSTALL_DATA) $(srcdir)/djpeg.1 $(mandir)/$(manprefix)djpeg.$(manext)
+ 	$(INSTALL_DATA) $(srcdir)/jpegtran.1 $(mandir)/$(manprefix)jpegtran.$(manext)
+@@ -175,7 +185,7 @@
+ 	$(INSTALL_DATA) $(srcdir)/jerror.h $(includedir)/jerror.h
+ 
+ clean:
+-	$(RM) *.o cjpeg djpeg jpegtran libjpeg.a rdjpgcom wrjpgcom
++	$(RM) *.o cjpeg djpeg jpegtran libjpeg.a rdjpgcom wrjpgcom jphide jpseek
+ 	$(RM) ansi2knr core testout* config.log config.status
+ 
+ distribute:
+@@ -257,6 +267,8 @@
+ cjpeg.o: cjpeg.c cdjpeg.h jinclude.h jconfig.h jpeglib.h jmorecfg.h jerror.h cderror.h jversion.h
+ djpeg.o: djpeg.c cdjpeg.h jinclude.h jconfig.h jpeglib.h jmorecfg.h jerror.h cderror.h jversion.h
+ jpegtran.o: jpegtran.c cdjpeg.h jinclude.h jconfig.h jpeglib.h jmorecfg.h jerror.h cderror.h jversion.h
++jphide.o: jphide.c cdjpeg.h jinclude.h jconfig.h jpeglib.h jmorecfg.h jerror.h cderror.h jversion.h ltable.h
++jpseek.o: jpseek.c cdjpeg.h jinclude.h jconfig.h jpeglib.h jmorecfg.h jerror.h cderror.h jversion.h ltable.h
+ cdjpeg.o: cdjpeg.c cdjpeg.h jinclude.h jconfig.h jpeglib.h jmorecfg.h jerror.h cderror.h
+ rdcolmap.o: rdcolmap.c cdjpeg.h jinclude.h jconfig.h jpeglib.h jmorecfg.h jerror.h cderror.h
+ rdswitch.o: rdswitch.c cdjpeg.h jinclude.h jconfig.h jpeglib.h jmorecfg.h jerror.h cderror.h
