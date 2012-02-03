@@ -10,12 +10,13 @@
 #ifndef _BF_H_
 #define _BF_H_
 
-#include <asm/types.h>       	/* gives __u32 as an unsigned 32bit integer */
 /* PORTABILITY: under non-Linux,
    omit this include and insert an appropriate typedef
 */
+//#include <asm/types.h>       	/* gives __u32 as an unsigned 32bit integer */
+#include <stdint.h>	/* gives uint32_t as an unsigned 32bit integer */
 
-#include <asm/byteorder.h>
+//# include <asm/byteorder.h>
 /* PORTABILITY: under non-Linux, omit this include.
    Generic, endian-neutral, slower C routines will be used instead of
    the assembler versions found in the kernel includes.
@@ -43,11 +44,11 @@
 #endif
 
 /* The data block processed by the encryption algorithm - 64 bits */
-typedef __u32 Blowfish_Data[2];
+typedef uint32_t Blowfish_Data[2];
 /* The key as entered by the user - size may vary */
 typedef char Blowfish_UserKey[16];
 /* The expanded key for internal use - 18+4*256 words*/
-typedef __u32 Blowfish_Key[1042];
+typedef uint32_t Blowfish_Key[1042];
 
 /* Byteorder-dependent handling of data encryption: Blowfish is by
    definition big-endian. However, there are broken implementations on
@@ -55,21 +56,17 @@ typedef __u32 Blowfish_Key[1042];
    This module provides both variants.
  */
 
-/* Native byte order. For internal use ONLY. */
-extern void _N_Blowfish_Encrypt(void *dataIn, void *dataOut,
-				const Blowfish_Key key);
-extern void _N_Blowfish_Decrypt(void *dataIn, void *dataOut,
-				const Blowfish_Key key);
 
 #ifndef BF_DONTNEED_BE
 /* Big endian. This is the "real" Blowfish. */
 #ifdef BF_NATIVE_BE
+#undef BF_DONTNEED_N
 #define B_Blowfish_Encrypt _N_Blowfish_Encrypt
 #define B_Blowfish_Decrypt _N_Blowfish_Decrypt
 #else
-extern void B_Blowfish_Encrypt(void *dataIn, void *dataOut,
+extern void B_Blowfish_Encrypt(uint32_t *dataIn, uint32_t *dataOut,
 			       const Blowfish_Key key);
-extern void B_Blowfish_Decrypt(void *dataIn, void *dataOut,
+extern void B_Blowfish_Decrypt(uint32_t *dataIn, uint32_t *dataOut,
 			       const Blowfish_Key key);
 #endif
 #endif
@@ -77,14 +74,23 @@ extern void B_Blowfish_Decrypt(void *dataIn, void *dataOut,
 #ifndef BF_DONTNEED_LE
 /* Little endian. To be compatible with other LE implementations. */
 #ifdef BF_NATIVE_LE
+#undef BF_DONTNEED_N
 #define L_Blowfish_Encrypt _N_Blowfish_Encrypt
 #define L_Blowfish_Decrypt _N_Blowfish_Decrypt
 #else
-extern void L_Blowfish_Encrypt(void *dataIn, void *dataOut,
+extern void L_Blowfish_Encrypt(uint32_t *dataIn, uint32_t *dataOut,
 			       const Blowfish_Key key);
-extern void L_Blowfish_Decrypt(void *dataIn, void *dataOut,
+extern void L_Blowfish_Decrypt(uint32_t *dataIn, uint32_t *dataOut,
 			       const Blowfish_Key key);
 #endif
+#endif
+
+#ifndef BF_DONTNEED_N
+/* Native byte order. For internal use ONLY. */
+extern void _N_Blowfish_Encrypt(uint32_t *dataIn, uint32_t *dataOut,
+				const Blowfish_Key key);
+extern void _N_Blowfish_Decrypt(uint32_t *dataIn, uint32_t *dataOut,
+				const Blowfish_Key key);
 #endif
 
 /* User key expansion. This is not byteorder dependent as all common

@@ -8,6 +8,8 @@
 */
 
 #include "bf.h"
+#include <stdint.h>
+#include <endian.h>
 
 #ifdef __KERNEL__
 #include <linux/types.h>
@@ -55,22 +57,6 @@ inline void Blowfish_yield(void)
 #define INLINE static
 #endif
 
-#ifndef __cpu_to_be32
-INLINE __u32 __cpu_to_be32(__u32 x)
-{
-    register unsigned char *p=(unsigned char *)&x;
-    return (p[0]<<24)+(p[1]<<16)+(p[2]<<8)+p[3];
-}
-#endif
-
-#ifndef __cpu_to_le32
-INLINE __u32 __cpu_to_le32(__u32 x)
-{
-    register unsigned char *p=(unsigned char *)&x;
-    return (p[3]<<24)+(p[2]<<16)+(p[1]<<8)+p[0];
-}
-#endif
-
 /* Macros to implement the round function. */
 
 /* access the P and S boxes in key array */
@@ -112,56 +98,58 @@ INLINE __u32 __cpu_to_le32(__u32 x)
 
 /* Native byte order routines */
 
-void _N_Blowfish_Encrypt(void *dataIn, void *dataOut,
+#ifndef BF_DONTNEED_N
+void _N_Blowfish_Encrypt(uint32_t *dataIn, uint32_t *dataOut,
 			 const Blowfish_Key key)
 {
-    register const __u32 *p=(const __u32 *)key;
+    register const uint32_t *p=(const uint32_t *)key;
     register unsigned long
-	l=((__u32 *)dataIn)[0]^(*p++),
-	r=((__u32 *)dataIn)[1];
+	l=((uint32_t *)dataIn)[0]^(*p++),
+	r=((uint32_t *)dataIn)[1];
     RoundsP;
-    ((__u32 *)dataOut)[0]=r^(*p);
-    ((__u32 *)dataOut)[1]=l;
+    ((uint32_t *)dataOut)[0]=r^(*p);
+    ((uint32_t *)dataOut)[1]=l;
 }
 
-void _N_Blowfish_Decrypt(void *dataIn, void *dataOut,
+void _N_Blowfish_Decrypt(uint32_t *dataIn, uint32_t *dataOut,
 			 const Blowfish_Key key)
 {
-    register const __u32 *p=((const __u32 *)key)+17;
+    register const uint32_t *p=((const uint32_t *)key)+17;
     register unsigned long
-	l=((__u32 *)dataIn)[0]^(*p--),
-	r=((__u32 *)dataIn)[1];
+	l=((uint32_t *)dataIn)[0]^(*p--),
+	r=((uint32_t *)dataIn)[1];
     RoundsN;
-    ((__u32 *)dataOut)[0]=r^(*p);
-    ((__u32 *)dataOut)[1]=l;
+    ((uint32_t *)dataOut)[0]=r^(*p);
+    ((uint32_t *)dataOut)[1]=l;
 }
+#endif
 
 /* Big-endian routines (i.e. real Blowfish) */
 
 #ifndef BF_DONTNEED_BE
 #ifndef BF_NATIVE_BE
-void B_Blowfish_Encrypt(void *dataIn, void *dataOut,
+void B_Blowfish_Encrypt(uint32_t *dataIn, uint32_t *dataOut,
 			const Blowfish_Key key)
 {
-    register const __u32 *p=(const __u32 *)key;
+    register const uint32_t *p=(const uint32_t *)key;
     register unsigned long
-	l=__be32_to_cpup(dataIn)^(*p++),
-	r=__be32_to_cpup(dataIn+4);
+	l=be32toh(*dataIn)^(*p++),
+	r=be32toh(*(dataIn+1));
     RoundsP;
-    ((__u32 *)dataOut)[0]=__cpu_to_be32(r^(*p));
-    ((__u32 *)dataOut)[1]=__cpu_to_be32(l);
+    ((uint32_t *)dataOut)[0]=htobe32(r^(*p));
+    ((uint32_t *)dataOut)[1]=htobe32(l);
 }
 
-void B_Blowfish_Decrypt(void *dataIn, void *dataOut,
+void B_Blowfish_Decrypt(uint32_t *dataIn, uint32_t *dataOut,
 			const Blowfish_Key key)
 {
-    register const __u32 *p=((const __u32 *)key)+17;
+    register const uint32_t *p=((const uint32_t *)key)+17;
     register unsigned long
-	l=__be32_to_cpup(dataIn)^(*p--),
-	r=__be32_to_cpup(dataIn+4);
+	l=be32toh(*dataIn)^(*p--),
+	r=be32toh(*(dataIn+1));
     RoundsN;
-    ((__u32 *)dataOut)[0]=__cpu_to_be32(r^(*p));
-    ((__u32 *)dataOut)[1]=__cpu_to_be32(l);
+    ((uint32_t *)dataOut)[0]=htobe32(r^(*p));
+    ((uint32_t *)dataOut)[1]=htobe32(l);
 }
 #endif
 #endif
@@ -170,28 +158,28 @@ void B_Blowfish_Decrypt(void *dataIn, void *dataOut,
 
 #ifndef BF_DONTNEED_LE
 #ifndef BF_NATIVE_LE
-void L_Blowfish_Encrypt(void *dataIn, void *dataOut,
+void L_Blowfish_Encrypt(uint32_t *dataIn, uint32_t *dataOut,
 			const Blowfish_Key key)
 {
-    register const __u32 *p=key;
+    register const uint32_t *p=key;
     register unsigned long
-	l=__le32_to_cpup(dataIn)^(*p++),
-	r=__le32_to_cpup(dataIn+4);
+	l=le32toh(*dataIn)^(*p++),
+	r=le32toh(*(dataIn+1));
     RoundsP;
-    ((__u32 *)dataOut)[0]=__cpu_to_le32(r^(*p));
-    ((__u32 *)dataOut)[1]=__cpu_to_le32(l);
+    ((uint32_t *)dataOut)[0]=htole32(r^(*p));
+    ((uint32_t *)dataOut)[1]=htole32(l);
 }
 
-void L_Blowfish_Decrypt(void *dataIn, void *dataOut,
+void L_Blowfish_Decrypt(uint32_t *dataIn, uint32_t *dataOut,
 			const Blowfish_Key key)
 {
-    register const __u32 *p=key+17;
+    register const uint32_t *p=key+17;
     register unsigned long
-	l=__le32_to_cpup(dataIn)^(*p--),
-	r=__le32_to_cpup(dataIn+4);
+	l=le32toh(*dataIn)^(*p--),
+	r=le32toh(*(dataIn+1));
     RoundsN;
-    ((__u32 *)dataOut)[0]=__cpu_to_le32(r^(*p));
-    ((__u32 *)dataOut)[1]=__cpu_to_le32(l);
+    ((uint32_t *)dataOut)[0]=htole32(r^(*p));
+    ((uint32_t *)dataOut)[1]=htole32(l);
 }
 #endif
 #endif
@@ -203,7 +191,7 @@ void Blowfish_ExpandUserKey(const char *userKey, int userKeyLen,
 {
     char d[8] = {0, 0, 0, 0, 0, 0, 0, 0};
     int i, j;
-    __u32 u;
+    uint32_t u;
 
     #define UK	(userKey[j]&255)
     #define UKI	if (++j>=userKeyLen) j=0
@@ -216,12 +204,12 @@ void Blowfish_ExpandUserKey(const char *userKey, int userKeyLen,
     }
     memcpy(key+18, Blowfish_Init_Key+18, 4096);
     for (i=0; i<1042; i+=2) {
-	_N_Blowfish_Encrypt(d, d, key);
+	_N_Blowfish_Encrypt((uint32_t *)d, (uint32_t *)d, key);
 #ifdef BF_YIELD
 	Blowfish_yield();
 #endif
-	key[i]=((__u32 *)d)[0];
-	key[i+1]=((__u32 *)d)[1];
+	key[i]=((uint32_t *)d)[0];
+	key[i+1]=((uint32_t *)d)[1];
     }
 }
 
