@@ -52,27 +52,7 @@ jpseek  input-jpeg-file  output-hidden-file
 
 Building the programs
 
-Get the sources for the jpeg library jpeg-6a.
-I got mine from a RedHat cd.
-
-Compile them following the instructions that came with them. 
-
-Check them out - there is a "make test".
-
-Use tar to put the new programs into the directory containing
-the standard jpeg-6a sources:
-
-  tar -xzf jphs.tgz
-
-Patch the makefile:
-
-  patch <Makefile.patch
-
-Make the new programs:
-
-  make
-
-Sorry but if you get errors you will have to fix them yourself.
+Just type make.
 
 Install "jphide" and "jpseek" in your /usr/local/bin or wherever.
 
@@ -93,4 +73,4 @@ of your own hidden files does not depend on keeping your modifications
 secret.
 
 Revision 0.3  Allan Latham <alatham@flexsys-group.com>
-
+Revised 2012/02/03 by Dan Church <amphetamachine@gmail.com>
