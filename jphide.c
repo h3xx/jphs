@@ -26,8 +26,6 @@
 
 #define NKSTREAMS 4
 
-static char *progname;
-
 static jvirt_barray_ptr * coef_arrays;
 static unsigned int  cpos[NKSTREAMS];
 static Blowfish_Data cdata[NKSTREAMS];
@@ -415,7 +413,7 @@ static void intro()
 {
  struct rlimit	rlim;
 
- printf("\n%s, version %d.%d (c) 1998 Allan Latham <alatham@flexsys-group.com>\n\n", progname, HS_MAJOR_VERSION, HS_MINOR_VERSION);
+ printf("\njphide, version %d.%d (c) 1998 Allan Latham <alatham@flexsys-group.com>\n\n", HS_MAJOR_VERSION, HS_MINOR_VERSION);
  printf("This is licenced software but no charge is made for its use.\n");
  printf("NO WARRANTY whatsoever is offered with this product.\n");
  printf("NO LIABILITY whatsoever is accepted for its use.\n");
@@ -430,13 +428,12 @@ static void intro()
 static void usage()
 {
  fprintf(stderr,"Usage:\n\n\
-%s input-jpg-file output-jpg-file hide-file\n\n",progname);
+jphide input-jpg-file output-jpg-file hide-file\n\n");
  exit(1);
 }
 
 int main(int argc, char **argv)
 {
- progname = argv[0];
  intro();
  if (argc != 4) usage();
  return (jphide(argv[1],argv[2],argv[3]));
