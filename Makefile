@@ -2,7 +2,7 @@
 HDOBJECTS = jphide.o bf.o
 SKOBJECTS = jpseek.o bf.o
 
-CFLAGS = -I./jp/jpeg-8a -DBlowfish_Encrypt=_N_Blowfish_Encrypt -DBlowfish_Decrypt=_N_Blowfish_Decrypt -O2
+CFLAGS = -I./jpeg-8a -DBlowfish_Encrypt=_N_Blowfish_Encrypt -DBlowfish_Decrypt=_N_Blowfish_Decrypt -O2
 
 all: jphide jpseek
 
