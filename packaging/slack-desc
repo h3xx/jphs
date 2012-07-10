@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in. You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+    |-----handy-ruler------------------------------------------------------|
+jphs: jphide and seek (steganography tools)
+jphs:
+jphs: These are command line tools for hiding small files inside of jpeg
+jphs: files, protected by passphrases. Choose images with large amounts of
+jphs: enthropy for best results.
+jphs:
+jphs:
+jphs:
+jphs:
+jphs: Homepage: https://github.com/h3xx/jphs
+jphs:
