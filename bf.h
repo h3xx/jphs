@@ -10,6 +10,8 @@
 #ifndef _BF_H_
 #define _BF_H_
 
+#include "bf_config.h"
+
 /* PORTABILITY: under non-Linux,
    omit this include and insert an appropriate typedef
 */

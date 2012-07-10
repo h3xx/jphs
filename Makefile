@@ -3,22 +3,17 @@ HDOBJECTS = jphide.o bf.o
 SKOBJECTS = jpseek.o bf.o
 
 ## flags
+CFLAGS_COMMON = -O2
 
 ### big-endian Blowfish only flags
-BE_CFLAGS = -DBF_DONTNEED_LE \
-	    -DBlowfish_Encrypt=B_Blowfish_Encrypt \
-	    -DBlowfish_Decrypt=B_Blowfish_Decrypt
+BE_CFLAGS = -DBF_BE
 ### little-endian Blowfish only flags
 ### (might break Blowfish which is big-endian by default)
-LE_CFLAGS = -DBF_DONTNEED_BE \
-	    -DBlowfish_Encrypt=L_Blowfish_Encrypt \
-	    -DBlowfish_Decrypt=L_Blowfish_Decrypt
+LE_CFLAGS = -DBF_LE
 
-JP_CFLAGS = -O2 \
-	    -I./jpeg-8a \
-	    $(BE_CFLAGS)
-BF_CFLAGS = -O2 \
-	    $(BE_CFLAGS)
+JP_CFLAGS = $(CFLAGS_COMMON) \
+	    -I./jpeg-8a
+BF_CFLAGS = $(CFLAGS_COMMON)
 
 LIBS = -ljpeg
 LDFLAGS = $(LIBS)
@@ -44,7 +39,7 @@ bf.o:			CFLAGS=$(BF_CFLAGS)
 jphide.o jpseek.o:	CFLAGS=$(JP_CFLAGS)
 
 # dependencies
-bf.c: bf.h
+bf.c: bf.h bf_config.h
 jphide.c: ltable.h version.h bf.h
 jpseek.c: ltable.h version.h bf.h
 
