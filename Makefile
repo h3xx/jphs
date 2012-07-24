@@ -50,11 +50,14 @@ clean:
 		$(HDOBJECTS) \
 		$(SKOBJECTS)
 
+distclean: clean
+	$(RM) *~ .*~ \#*\#
+
 install: all
 	$(INSTALL_DIR) $(DESTDIR)$(BINDIR)
 	$(INSTALL_BIN) $(TARGETS) $(DESTDIR)$(BINDIR)
 
-.PHONY: all clean install
+.PHONY: all clean distclean install
 
 #jphide.o: jphide.c cdjpeg.h jinclude.h jconfig.h jpeglib.h jmorecfg.h jerror.h cderror.h jversion.h ltable.h
 #jpseek.o: jpseek.c cdjpeg.h jinclude.h jconfig.h jpeglib.h jmorecfg.h jerror.h cderror.h jversion.h ltable.h
