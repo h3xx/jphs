@@ -9,7 +9,13 @@
 
 #include "bf.h"
 #include <stdint.h>
+
+/* Use provided file with endian defines when on Apple */
+#ifdef __APPLE__
+#include "endian.h"
+#else
 #include <endian.h>
+#endif /* __APPLE__ */
 
 #ifdef __KERNEL__
 #include <linux/types.h>
